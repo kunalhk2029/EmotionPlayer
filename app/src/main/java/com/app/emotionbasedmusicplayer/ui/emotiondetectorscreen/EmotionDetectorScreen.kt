@@ -91,7 +91,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             isAllCaps = true
         }
 
-        val musicitemlist = MusicService(requireContext()).getSong(emotion_query)
+        val musicitemlist = MusicService(requireContext()).getTracksFromSpotify(emotion_query)
 
         requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.VISIBLE
         requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.GONE

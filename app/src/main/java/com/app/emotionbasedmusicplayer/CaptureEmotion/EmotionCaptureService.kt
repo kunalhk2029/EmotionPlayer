@@ -35,10 +35,12 @@ class EmotionCaptureService() : FirebaseMessagingService() {
         val emotion = message.data.get("emotion")
 
         if (emotion != null) {
+
         CoroutineScope(IO).launch {
                 latestEmotion.send(emotion)
             }
         }
+
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -52,7 +54,6 @@ class EmotionCaptureService() : FirebaseMessagingService() {
             .setContentText("$emotion")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
         notificationManager.notify(1, notification.build())
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
