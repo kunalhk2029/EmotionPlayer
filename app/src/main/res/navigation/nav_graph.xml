@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/emotionDetectorScreen">
+
+    <fragment
+        android:id="@+id/emotionDetectorScreen"
+        android:name="com.app.emotionbasedmusicplayer.ui.emotiondetectorscreen.EmotionDetectorScreen"
+        android:label="fragment_emotion_detector_screen"
+        tools:layout="@layout/fragment_emotion_detector_screen" >
+        <action
+            android:id="@+id/action_emotionDetectorScreen_to_musicPlayer"
+            app:destination="@id/musicPlayer"
+            app:popUpTo="@id/emotionDetectorScreen" />
+    </fragment>
+    <fragment
+        android:id="@+id/musicPlayer"
+        android:name="com.app.emotionbasedmusicplayer.ui.player.MusicPlayer"
+        android:label="fragment_music_player"
+        tools:layout="@layout/fragment_music_player" />
+</navigation>
