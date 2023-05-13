@@ -18,7 +18,6 @@ import com.app.emotionbasedmusicplayer.MainActivity
 import com.app.emotionbasedmusicplayer.R
 import com.app.emotionbasedmusicplayer.models.MusicInfo
 import com.app.emotionbasedmusicplayer.network.FakeNetwrokGreneratedModels
-import com.app.emotionbasedmusicplayer.network.MusicService
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
@@ -45,26 +44,30 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = (requireActivity() as MainActivity).viewModel
+
         initSongAdapter()
         initRecyclerView()
 
         listenToLatestEmotions()
 
-        viewModel = (requireActivity() as MainActivity).viewModel
 
         viewModel.list.observe(viewLifecycleOwner) {
+            lastEmotionDetected.let {
+                handleEmotionBasedUi(it)
+            }
             requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.VISIBLE
             requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.GONE
             songAdapter.submitList(it)
             it.forEach {
-                println("487398493 = " + it)
+//                println("487398493 = " + it)
             }
         }
     }
 
     private fun listenToLatestEmotions() {
         lifecycleScope.launch {
-            detectEmotion("happy")
+//            detectEmotion("happy")
         }
 
         latestEmotion.receiveAsFlow().onEach {
@@ -90,43 +93,49 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
     @SuppressLint("SetTextI18n")
     private suspend fun getSongs(emotion_query: String) {
+        requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.GONE
+        requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.VISIBLE
+        handleEmotionBasedUi(emotion_query)
+    }
+
+    private fun handleEmotionBasedUi(emotion_query: String) {
         val emojiView = requireView().findViewById<ImageView>(R.id.emojiview)
         val rootView = requireView().rootView
         emojiView.setImageDrawable(null)
-        requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.GONE
-        requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.VISIBLE
         requireView().findViewById<TextView>(R.id.detectedemotiontextview).apply {
             text = emotion_query + " Emotion Detected"
             isAllCaps = true
         }
 
         when (emotion_query) {
-            "happy" -> {
 
-                viewModel.list.postValue(
-                MusicService(requireContext()).getTracksFromSpotify("happy"))
-                return
+            "happy" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.happycolor), rootView)
                 Glide.with(emojiView).load(R.drawable.happyemoji).into(emojiView)
                 if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
-                    delay(1500L)
-                viewModel.list.postValue(FakeNetwrokGreneratedModels.happyList)
-
+                    lifecycleScope.launch {
+                        delay(1500L)
+                        viewModel.list.postValue(FakeNetwrokGreneratedModels.happyList)
+                    }
             }
             "sad" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.sadcolor), rootView)
                 Glide.with(emojiView).load(R.drawable.sademoji).into(emojiView)
                 if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
-                    delay(1500L)
-                viewModel.list.postValue(FakeNetwrokGreneratedModels.sadList)
+                    lifecycleScope.launch {
+                        delay(1500L)
+                        viewModel.list.postValue(FakeNetwrokGreneratedModels.sadList)
+                    }
 
             }
             "angry" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.angrycolor), rootView)
                 Glide.with(emojiView).load(R.drawable.angryemoji).into(emojiView)
                 if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
-                    delay(1500L)
-                viewModel.list.postValue(FakeNetwrokGreneratedModels.angryList)
+                    lifecycleScope.launch {
+                        delay(1500L)
+                        viewModel.list.postValue(FakeNetwrokGreneratedModels.angryList)
+                    }
             }
             else -> {
             }
