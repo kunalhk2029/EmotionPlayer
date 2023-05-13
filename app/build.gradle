@@ -4,6 +4,8 @@ plugins {
     id 'com.google.gms.google-services'
     id "androidx.navigation.safeargs"
     id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+
 }
 
 android {
@@ -69,4 +71,11 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer:2.18.1'
 
 
+    /// Dagger Android
+    api 'com.google.dagger:dagger-android:2.35.1'
+    api 'com.google.dagger:dagger-android-support:2.27'
+    kapt 'com.google.dagger:dagger-android-processor:2.38.1'
+    //Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:2.38.1"
+    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
 }

@@ -3,29 +3,43 @@ package com.app.emotionbasedmusicplayer.ui.emotiondetectorscreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.annotation.ColorInt
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.app.emotionbasedmusicplayer.MainActivity
 import com.app.emotionbasedmusicplayer.R
 import com.app.emotionbasedmusicplayer.models.MusicInfo
+import com.app.emotionbasedmusicplayer.network.FakeNetwrokGreneratedModels
 import com.app.emotionbasedmusicplayer.network.MusicService
+import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen),
     SongAdapter.Interaction {
 
     lateinit var songAdapter: SongAdapter
 
+    lateinit var viewModel: PreviewViewModel
+
     companion object {
         val latestEmotion: Channel<String> = Channel()
+        var lastEmotionDetected = ""
+        var lastEmotionDetectedTimeStamp = 0L
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,9 +50,23 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
         listenToLatestEmotions()
 
+        viewModel = (requireActivity() as MainActivity).viewModel
+
+        viewModel.list.observe(viewLifecycleOwner) {
+            requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.VISIBLE
+            requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.GONE
+            songAdapter.submitList(it)
+            it.forEach {
+                println("487398493 = " + it)
+            }
+        }
     }
 
     private fun listenToLatestEmotions() {
+        lifecycleScope.launch {
+            detectEmotion("happy")
+        }
+
         latestEmotion.receiveAsFlow().onEach {
             println("5985985 = " + it)
             detectEmotion(it)
@@ -46,29 +74,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
     }
 
     private suspend fun detectEmotion(emotion: String) {
-        println("5985985 = 1 =" + emotion)
-        when (emotion) {
-            "Happy" -> {
-                getSongs("happy").let {
-                    songAdapter.submitList(it)
-                }
-            }
-            "Sad" -> {
-                getSongs("sad").let {
-                    songAdapter.submitList(it)
-                }
-            }
-            "Angry" -> {
-                getSongs("angry").let {
-                    songAdapter.submitList(it)
-                }
-            }
-            else->{
-                getSongs(emotion).let {
-                    songAdapter.submitList(it)
-                }
-            }
-        }
+        getSongs(emotion)
     }
 
     private fun initSongAdapter() {
@@ -83,7 +89,10 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
     }
 
     @SuppressLint("SetTextI18n")
-    private suspend fun getSongs(emotion_query: String): List<MusicInfo> {
+    private suspend fun getSongs(emotion_query: String) {
+        val emojiView = requireView().findViewById<ImageView>(R.id.emojiview)
+        val rootView = requireView().rootView
+        emojiView.setImageDrawable(null)
         requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.GONE
         requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.VISIBLE
         requireView().findViewById<TextView>(R.id.detectedemotiontextview).apply {
@@ -91,12 +100,49 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             isAllCaps = true
         }
 
-        val musicitemlist = MusicService(requireContext()).getTracksFromSpotify(emotion_query)
+        when (emotion_query) {
+            "happy" -> {
 
-        requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.VISIBLE
-        requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.GONE
+                viewModel.list.postValue(
+                MusicService(requireContext()).getTracksFromSpotify("happy"))
+                return
+                setColor(ContextCompat.getColor(requireContext(), R.color.happycolor), rootView)
+                Glide.with(emojiView).load(R.drawable.happyemoji).into(emojiView)
+                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
+                    delay(1500L)
+                viewModel.list.postValue(FakeNetwrokGreneratedModels.happyList)
 
-        return musicitemlist
+            }
+            "sad" -> {
+                setColor(ContextCompat.getColor(requireContext(), R.color.sadcolor), rootView)
+                Glide.with(emojiView).load(R.drawable.sademoji).into(emojiView)
+                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
+                    delay(1500L)
+                viewModel.list.postValue(FakeNetwrokGreneratedModels.sadList)
+
+            }
+            "angry" -> {
+                setColor(ContextCompat.getColor(requireContext(), R.color.angrycolor), rootView)
+                Glide.with(emojiView).load(R.drawable.angryemoji).into(emojiView)
+                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
+                    delay(1500L)
+                viewModel.list.postValue(FakeNetwrokGreneratedModels.angryList)
+            }
+            else -> {
+            }
+        }
+
+    }
+
+    private fun setColor(@ColorInt color: Int, rootView: View) {
+        rootView.setBackgroundColor(color)
+        if (isDark(color))
+            requireView().findViewById<TextView>(R.id.detectedemotiontextview)
+                .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    }
+
+    private fun isDark(@ColorInt color: Int): Boolean {
+        return ColorUtils.calculateLuminance(color) < 0.5
     }
 
     override fun onItemSelected(position: Int, item: MusicInfo) {
