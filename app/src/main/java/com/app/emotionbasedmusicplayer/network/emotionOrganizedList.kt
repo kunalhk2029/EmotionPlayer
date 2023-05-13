@@ -28,4 +28,27 @@ object emotionOrganizedList {
         "Zingaat",
         "Dil dhadakne do"
     )
+
+    val angryList = listOf(
+        "Jee karda",
+        "Saada haq",
+        "Ik junoon",
+        "Emotional atyachar",
+        "Sau tarah ke",
+        "Chil gye Naina"
+    )
+
+    val coolList = listOf(
+        "Khadke glassy",
+        "Aakh mare",
+        "Balam pichkari",
+        "Galla goodiya",
+        "Hauli hauli",
+        "Hookah bar",
+        "Kala chashma",
+        "Vele",
+        "Zingaat",
+        "The jawani song"
+    )
+
 }

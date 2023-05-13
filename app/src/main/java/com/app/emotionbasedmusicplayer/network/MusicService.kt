@@ -59,12 +59,8 @@ class MusicService(context: Context) {
     suspend fun getTracksFromSpotify(emotion_query: String): List<MusicInfo> {
         return withContext(IO) {
 
-            val songNamelist = if
-                    (emotion_query=="sad") emotionOrganizedList.sadList
-            else if (emotion_query=="happy") emotionOrganizedList.happyList
+            val songNamelist = emotionOrganizedList.coolList
 
-
-            else listOf()
             val job = Job()
             val list = mutableListOf<MusicInfo>()
             var lastRequestId=""

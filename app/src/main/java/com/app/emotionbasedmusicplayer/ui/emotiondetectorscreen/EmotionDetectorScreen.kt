@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.app.emotionbasedmusicplayer.MainActivity
 import com.app.emotionbasedmusicplayer.R
 import com.app.emotionbasedmusicplayer.models.MusicInfo
-import com.app.emotionbasedmusicplayer.network.FakeNetwrokGreneratedModels
+import com.app.emotionbasedmusicplayer.network.FakeNetworkGreneratedModels
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
@@ -67,7 +67,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
     private fun listenToLatestEmotions() {
         lifecycleScope.launch {
-//            detectEmotion("happy")
+//            detectEmotion("angry")
         }
 
         latestEmotion.receiveAsFlow().onEach {
@@ -112,31 +112,44 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             "happy" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.happycolor), rootView)
                 Glide.with(emojiView).load(R.drawable.happyemoji).into(emojiView)
-                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
                     lifecycleScope.launch {
                         delay(1500L)
-                        viewModel.list.postValue(FakeNetwrokGreneratedModels.happyList)
+                        viewModel.list.postValue(FakeNetworkGreneratedModels.happyList)
                     }
             }
             "sad" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.sadcolor), rootView)
                 Glide.with(emojiView).load(R.drawable.sademoji).into(emojiView)
-                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
                     lifecycleScope.launch {
                         delay(1500L)
-                        viewModel.list.postValue(FakeNetwrokGreneratedModels.sadList)
+                        viewModel.list.postValue(FakeNetworkGreneratedModels.sadList)
                     }
 
             }
+
+            "cool" -> {
+                setColor(ContextCompat.getColor(requireContext(), R.color.teal_200), rootView)
+                Glide.with(emojiView).load(R.drawable.coolemoji).into(emojiView)
+                lifecycleScope.launch {
+                    delay(1500L)
+                    viewModel.list.postValue(FakeNetworkGreneratedModels.coolList)
+                }
+
+            }
             "angry" -> {
+//                lifecycleScope.launch {
+//                    viewModel.list.postValue(MusicService(requireContext()).getTracksFromSpotify(""))
+//                }
+//                return
                 setColor(ContextCompat.getColor(requireContext(), R.color.angrycolor), rootView)
                 Glide.with(emojiView).load(R.drawable.angryemoji).into(emojiView)
-                if (FakeNetwrokGreneratedModels.sadList.isNotEmpty())
+                if (FakeNetworkGreneratedModels.sadList.isNotEmpty())
                     lifecycleScope.launch {
                         delay(1500L)
-                        viewModel.list.postValue(FakeNetwrokGreneratedModels.angryList)
+                        viewModel.list.postValue(FakeNetworkGreneratedModels.angryList)
                     }
             }
+
             else -> {
             }
         }
