@@ -141,8 +141,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
                 lifecycleScope.launch {
                     delay(1500L)
                     viewModel.list.postValue(FakeNetworkGreneratedModels.happyList)
-                    if (FakeNetworkGreneratedMoviesModels.happyList.isEmpty()) movieRvView.visibility =
-                        View.GONE
+                    if (FakeNetworkGreneratedMoviesModels.happyList.isEmpty()) movieRvView.visibility = View.GONE
                     viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.happyList)
                 }
             }
@@ -155,9 +154,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
                     if (FakeNetworkGreneratedMoviesModels.sadList.isEmpty()) movieRvView.visibility =
                         View.GONE
                     viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.sadList)
-
                 }
-
             }
 
             "cool" -> {
@@ -171,7 +168,29 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
                     viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.coolList)
 
                 }
+            }
+            "exciting"  -> {
+                setColor(ContextCompat.getColor(requireContext(), R.color.teal_200), rootView)
+                Glide.with(emojiView).load(R.drawable.coolemoji).into(emojiView)
+                lifecycleScope.launch {
+                    delay(1500L)
+                    viewModel.list.postValue(FakeNetworkGreneratedModels.coolList)
+                    if (FakeNetworkGreneratedMoviesModels.exciting.isEmpty()) movieRvView.visibility =
+                        View.GONE
+                    viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.exciting)
+                }
+            }
 
+            "surprise"  -> {
+                setColor(ContextCompat.getColor(requireContext(), R.color.teal_200), rootView)
+                Glide.with(emojiView).load(R.drawable.coolemoji).into(emojiView)
+                lifecycleScope.launch {
+                    delay(1500L)
+                    viewModel.list.postValue(FakeNetworkGreneratedModels.coolList)
+                    if (FakeNetworkGreneratedMoviesModels.exciting.isEmpty()) movieRvView.visibility =
+                        View.GONE
+                    viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.exciting)
+                }
             }
             "angry" -> {
 //                lifecycleScope.launch {

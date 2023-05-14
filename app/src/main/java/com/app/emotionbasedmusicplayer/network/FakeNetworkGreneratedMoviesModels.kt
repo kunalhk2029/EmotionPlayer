@@ -1,7 +1,6 @@
 package com.app.emotionbasedmusicplayer.network
 
 import com.app.emotionbasedmusicplayer.models.MovieInfo
-import com.app.emotionbasedmusicplayer.models.MusicInfo
 
 object FakeNetworkGreneratedMoviesModels {
 
@@ -19,5 +18,27 @@ object FakeNetworkGreneratedMoviesModels {
 
     val coolList = listOf<MovieInfo>()
     val angryList = listOf<MovieInfo>()
-    val sadList = listOf<MovieInfo>()
+    val sadList = listOf<MovieInfo>(
+        MovieInfo("Taare Zameen par ", uri = "https://youtu.be/5vAmkhO-wAQ"),
+        MovieInfo("Bajrangi bhaijaan", uri = "https://youtu.be/4KlEH14ijOQ"),
+        MovieInfo("Jumbo", uri = "https://youtu.be/yGLvOObL9lc"),
+        MovieInfo("Sanam teri kasam", uri = "https://youtu.be/Q9WMfd96qVo"),
+        MovieInfo("The pursuit of happiness", uri = "https://youtu.be/6yPLdwqWcP0"),
+        MovieInfo("The fault in our stars", uri = "https://youtu.be/tFoE1Jb1v8Y"),
+        MovieInfo("Grave of the fireflies", uri = "https://youtu.be/1bQJTEGvoYU"),
+        MovieInfo("Forrest gump", uri = "https://youtu.be/IuVZ628yBqY")
+
+    )
+    val exciting = listOf<MovieInfo>(
+        MovieInfo("Karthik calling Karthik", uri = "https://youtu.be/ravw-oQXn6A"),
+        MovieInfo("A Wednesday", uri = "https://youtu.be/LEFkdNQpJ6E"),
+        MovieInfo("Drishyam", uri = "https://youtu.be/GVhPmsKSalI"),
+        MovieInfo("Ittefaq", uri = "https://youtu.be/blpaIKhxalk"),
+        MovieInfo("BirdBox ", uri = "https://youtu.be/z_iyiHdRL6A"),
+        MovieInfo("Predestination ", uri = "https://youtu.be/FBxg9-imPmk"),
+        MovieInfo("The time machine", uri = "https://youtu.be/K0qwuSOk6aY"),
+        MovieInfo("Get out", uri = "https://epixmovies.us/movie/tt5052448/"),
+        MovieInfo("Trapped", uri = "https://youtu.be/yZOG0hvvq_Q"),
+        MovieInfo("Wrong turn", uri = "https://youtu.be/sq2L4ELuZ78")
+    )
 }
