@@ -18,7 +18,7 @@ class MusicPlayer : Fragment(R.layout.fragment_music_player) {
     lateinit var player: ExoPlayer
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireArguments().getBoolean("isMoview").let {
+        requireArguments().getBoolean("isMovie").let {
             if (!it){
                 initExoPlayer()
                 requireView().findViewById<ImageView>(R.id.musicThumbnail).let {
@@ -32,6 +32,7 @@ class MusicPlayer : Fragment(R.layout.fragment_music_player) {
 
     private fun initWebPlayer() {
         val client =WebViewClient()
+        requireView().findViewById<StyledPlayerView>(R.id.musicPlayer).visibility=View.GONE
         requireView().findViewById<WebView>(R.id.webview).apply {
             visibility=View.VISIBLE
             webViewClient=client

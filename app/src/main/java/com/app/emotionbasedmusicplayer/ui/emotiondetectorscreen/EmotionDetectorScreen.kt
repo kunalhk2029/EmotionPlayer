@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
@@ -59,7 +60,9 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
         viewModel.movieList.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                requireView().findViewById<RecyclerView>(R.id.moview_rv).visibility = View.VISIBLE
+                requireView().findViewById<ConstraintLayout>(R.id.moview_rv).visibility =
+                    View.VISIBLE
+                requireView().findViewById<RecyclerView>(R.id.movie_rv).visibility = View.VISIBLE
                 movieAdapter.submitList(it)
             }
         }
@@ -89,6 +92,8 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
     }
 
     private suspend fun detectEmotion(emotion: String) {
+        viewModel.list.postValue(listOf())
+        viewModel.movieList.postValue(listOf())
         getMedia(emotion)
     }
 
@@ -105,7 +110,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songAdapter
         }
-        requireView().findViewById<RecyclerView>(R.id.moview_rv).apply {
+        requireView().findViewById<RecyclerView>(R.id.movie_rv).apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = movieAdapter
         }
@@ -120,7 +125,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
     private fun handleEmotionBasedUi(emotion_query: String) {
         val emojiView = requireView().findViewById<ImageView>(R.id.emojiview)
-        val movieRvView = requireView().findViewById<RecyclerView>(R.id.moview_rv)
+        val movieRvView = requireView().findViewById<ConstraintLayout>(R.id.moview_rv)
         val rootView = requireView().rootView
         emojiView.setImageDrawable(null)
         requireView().findViewById<TextView>(R.id.detectedemotiontextview).apply {
@@ -201,6 +206,10 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
         if (isDark(color))
             requireView().findViewById<TextView>(R.id.detectedemotiontextview)
                 .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        requireView().findViewById<TextView>(R.id.mtext)
+            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        requireView().findViewById<TextView>(R.id.songtext)
+            .setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
     }
 
     private fun isDark(@ColorInt color: Int): Boolean {
