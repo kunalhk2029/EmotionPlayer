@@ -38,7 +38,7 @@ class EmotionCaptureService() : FirebaseMessagingService() {
         val emotion = message.data.get("emotion")
 
         if (emotion != null) {
-            if (emotion == lastEmotionDetected || System.currentTimeMillis() < lastEmotionDetectedTimeStamp + 2000L) {
+            if (emotion == lastEmotionDetected || System.currentTimeMillis() < lastEmotionDetectedTimeStamp + 30000L) {
                 println("8989589 conidtin failed.............")
                 return
             }
