@@ -2,6 +2,8 @@ package com.app.emotionbasedmusicplayer.ui.player
 
 import android.os.Bundle
 import android.view.View
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.app.emotionbasedmusicplayer.R
@@ -16,13 +18,31 @@ class MusicPlayer : Fragment(R.layout.fragment_music_player) {
     lateinit var player: ExoPlayer
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initExoPlayer()
-        requireView().findViewById<ImageView>(R.id.musicThumbnail).let {
-            Glide.with(it).load(requireArguments().getString("thumbnail")).into(it)
+        requireArguments().getBoolean("isMoview").let {
+            if (!it){
+                initExoPlayer()
+                requireView().findViewById<ImageView>(R.id.musicThumbnail).let {
+                    Glide.with(it).load(requireArguments().getString("thumbnail")).into(it)
+                }
+            }else{
+                initWebPlayer()
+            }
         }
     }
 
-    private fun initExoPlayer() {
+    private fun initWebPlayer() {
+        val client =WebViewClient()
+        requireView().findViewById<WebView>(R.id.webview).apply {
+            visibility=View.VISIBLE
+            webViewClient=client
+            settings.displayZoomControls=true
+            settings.domStorageEnabled=true
+            settings.javaScriptEnabled=true
+            loadUrl(requireArguments().getString("url")!!)
+        }
+    }
+
+        private fun initExoPlayer() {
         val mediaItem = MediaItem.fromUri(requireArguments().getString("url")!!)
         player = ExoPlayer.Builder(requireContext()).build().also {
             requireView().findViewById<StyledPlayerView>(R.id.musicPlayer)?.let { uiplayer ->
@@ -32,6 +52,13 @@ class MusicPlayer : Fragment(R.layout.fragment_music_player) {
             it.playWhenReady = true
             it.setMediaItem(mediaItem)
             it.prepare()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (::player.isInitialized) {
+            player.release()
         }
     }
 

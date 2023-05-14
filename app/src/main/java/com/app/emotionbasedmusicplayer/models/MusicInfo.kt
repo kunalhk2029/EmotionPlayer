@@ -6,3 +6,9 @@ data class MusicInfo(
     val title: String,
     val uri: String
 )
+
+
+data class MovieInfo(
+    val title: String,
+    val uri: String
+)

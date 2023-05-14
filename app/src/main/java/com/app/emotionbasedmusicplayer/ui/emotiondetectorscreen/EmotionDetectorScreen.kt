@@ -16,8 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.app.emotionbasedmusicplayer.MainActivity
 import com.app.emotionbasedmusicplayer.R
+import com.app.emotionbasedmusicplayer.models.MovieInfo
 import com.app.emotionbasedmusicplayer.models.MusicInfo
 import com.app.emotionbasedmusicplayer.network.FakeNetworkGreneratedModels
+import com.app.emotionbasedmusicplayer.network.FakeNetworkGreneratedMoviesModels
+import com.app.emotionbasedmusicplayer.network.MusicService
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.channels.Channel
@@ -29,9 +32,10 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen),
-    SongAdapter.Interaction {
+    SongAdapter.Interaction, MovieAdapter.Interaction {
 
     lateinit var songAdapter: SongAdapter
+    lateinit var movieAdapter: MovieAdapter
 
     lateinit var viewModel: PreviewViewModel
 
@@ -47,10 +51,18 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
         viewModel = (requireActivity() as MainActivity).viewModel
 
         initSongAdapter()
+        initMovieAdapter()
         initRecyclerView()
 
         listenToLatestEmotions()
 
+
+        viewModel.movieList.observe(viewLifecycleOwner) {
+            if (it.isNotEmpty()) {
+                requireView().findViewById<RecyclerView>(R.id.moview_rv).visibility = View.VISIBLE
+                movieAdapter.submitList(it)
+            }
+        }
 
         viewModel.list.observe(viewLifecycleOwner) {
             lastEmotionDetected.let {
@@ -77,11 +89,15 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
     }
 
     private suspend fun detectEmotion(emotion: String) {
-        getSongs(emotion)
+        getMedia(emotion)
     }
 
     private fun initSongAdapter() {
         songAdapter = SongAdapter(this)
+    }
+
+    private fun initMovieAdapter() {
+        movieAdapter = MovieAdapter(this)
     }
 
     private fun initRecyclerView() {
@@ -89,10 +105,14 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             layoutManager = LinearLayoutManager(requireContext())
             adapter = songAdapter
         }
+        requireView().findViewById<RecyclerView>(R.id.moview_rv).apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = movieAdapter
+        }
     }
 
     @SuppressLint("SetTextI18n")
-    private suspend fun getSongs(emotion_query: String) {
+    private fun getMedia(emotion_query: String) {
         requireView().findViewById<RecyclerView>(R.id.song_rv).visibility = View.GONE
         requireView().findViewById<ProgressBar>(R.id.pb).visibility = View.VISIBLE
         handleEmotionBasedUi(emotion_query)
@@ -100,6 +120,7 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
 
     private fun handleEmotionBasedUi(emotion_query: String) {
         val emojiView = requireView().findViewById<ImageView>(R.id.emojiview)
+        val movieRvView = requireView().findViewById<RecyclerView>(R.id.moview_rv)
         val rootView = requireView().rootView
         emojiView.setImageDrawable(null)
         requireView().findViewById<TextView>(R.id.detectedemotiontextview).apply {
@@ -112,18 +133,25 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
             "happy" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.happycolor), rootView)
                 Glide.with(emojiView).load(R.drawable.happyemoji).into(emojiView)
-                    lifecycleScope.launch {
-                        delay(1500L)
-                        viewModel.list.postValue(FakeNetworkGreneratedModels.happyList)
-                    }
+                lifecycleScope.launch {
+                    delay(1500L)
+                    viewModel.list.postValue(FakeNetworkGreneratedModels.happyList)
+                    if (FakeNetworkGreneratedMoviesModels.happyList.isEmpty()) movieRvView.visibility =
+                        View.GONE
+                    viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.happyList)
+                }
             }
             "sad" -> {
                 setColor(ContextCompat.getColor(requireContext(), R.color.sadcolor), rootView)
                 Glide.with(emojiView).load(R.drawable.sademoji).into(emojiView)
-                    lifecycleScope.launch {
-                        delay(1500L)
-                        viewModel.list.postValue(FakeNetworkGreneratedModels.sadList)
-                    }
+                lifecycleScope.launch {
+                    delay(1500L)
+                    viewModel.list.postValue(FakeNetworkGreneratedModels.sadList)
+                    if (FakeNetworkGreneratedMoviesModels.sadList.isEmpty()) movieRvView.visibility =
+                        View.GONE
+                    viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.sadList)
+
+                }
 
             }
 
@@ -133,6 +161,10 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
                 lifecycleScope.launch {
                     delay(1500L)
                     viewModel.list.postValue(FakeNetworkGreneratedModels.coolList)
+                    if (FakeNetworkGreneratedMoviesModels.coolList.isEmpty()) movieRvView.visibility =
+                        View.GONE
+                    viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.coolList)
+
                 }
 
             }
@@ -147,10 +179,18 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
                     lifecycleScope.launch {
                         delay(1500L)
                         viewModel.list.postValue(FakeNetworkGreneratedModels.angryList)
+                        if (FakeNetworkGreneratedMoviesModels.angryList.isEmpty()) movieRvView.visibility =
+                            View.GONE
+                        viewModel.movieList.postValue(FakeNetworkGreneratedMoviesModels.angryList)
+
                     }
             }
 
             else -> {
+                lifecycleScope.launch {
+                    movieRvView.visibility = View.GONE
+                    viewModel.list.postValue(MusicService(requireContext()).getSong(emotion_query))
+                }
             }
         }
 
@@ -171,6 +211,15 @@ class EmotionDetectorScreen : Fragment(R.layout.fragment_emotion_detector_screen
         val bundle = Bundle().apply {
             putString("url", item.uri)
             putString("thumbnail", item.big_thumbnail)
+            putBoolean("isMovie", false)
+        }
+        findNavController().navigate(R.id.action_emotionDetectorScreen_to_musicPlayer, bundle)
+    }
+
+    override fun onItemSelected(position: Int, item: MovieInfo) {
+        val bundle = Bundle().apply {
+            putString("url", item.uri)
+            putBoolean("isMovie", true)
         }
         findNavController().navigate(R.id.action_emotionDetectorScreen_to_musicPlayer, bundle)
     }
