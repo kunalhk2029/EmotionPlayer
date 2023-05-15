@@ -166,4 +166,18 @@ object FakeNetworkGreneratedModels {
 
     )
 
+    val surprisedList = listOf(
+        MusicInfo(small_thumbnail = "https://i.scdn.co/image/ab67616d0000b273a60e3d480549fb60719a10cc", big_thumbnail="https://i.scdn.co/image/ab67616d0000b273a60e3d480549fb60719a10cc", title="Kabhi Kabhi Mere Dil Mein", uri="https://p.scdn.co/mp3-preview/d8ce44966c57b3fec8386ef777d8a2378300d3c4?cid=d8a5ed958d274c2e8ee717e6a4b0971d")
+        ,
+        MusicInfo(small_thumbnail = "https://i.scdn.co/image/ab67616d0000b273bca30634e6cad10b97c03d21", big_thumbnail="https://i.scdn.co/image/ab67616d0000b273bca30634e6cad10b97c03d21", title="Ae Dil Hai Mushkil" , uri="https://p.scdn.co/mp3-preview/3d71886b5707bb5d7d87303a37077d423e0ab8b9?cid=d8a5ed958d274c2e8ee717e6a4b0971d")
+        ,
+        MusicInfo(small_thumbnail = "https://i.scdn.co/image/ab67616d0000b27339bb12f14680bbfcaee0fd5d", big_thumbnail="https://i.scdn.co/image/ab67616d0000b27339bb12f14680bbfcaee0fd5d", title="Jai Ho", uri="https://p.scdn.co/mp3-preview/23302bf2bcb436cfc738931264f06cd4322c34fc?cid=d8a5ed958d274c2e8ee717e6a4b0971d")
+        ,
+        MusicInfo(small_thumbnail = "https://i.scdn.co/image/ab67616d0000b2734e2aa94e199e50bc8e10646f", big_thumbnail="https://i.scdn.co/image/ab67616d0000b2734e2aa94e199e50bc8e10646f", title="Dil Se Re", uri="https://p.scdn.co/mp3-preview/8ea6ff658b0e66aa6245e333927c0e4cfa769f76?cid=d8a5ed958d274c2e8ee717e6a4b0971d")
+    )
+
+    val meditationList = listOf(
+        MusicInfo(small_thumbnail="https://i.scdn.co/image/ab67616d0000b273d739f73cd05ced09b26cbd49", big_thumbnail="https://i.scdn.co/image/ab67616d0000b273d739f73cd05ced09b26cbd49", title="Om Namah Shivaya", uri="https://p.scdn.co/mp3-preview/72d4495756715eebf640c41dc4d24d1547f88731?cid=d8a5ed958d274c2e8ee717e6a4b0971d")
+    )
+
 }

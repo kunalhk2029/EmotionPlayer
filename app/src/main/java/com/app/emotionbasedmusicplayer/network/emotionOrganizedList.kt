@@ -51,4 +51,16 @@ object emotionOrganizedList {
         "The jawani song"
     )
 
+    val surprisedList = listOf(
+        "Kabhi Kabhi Mere Dil Mein",
+        "Ae Dil Hai Mushkil",
+        "Jai Ho",
+        "Dil Se Re",
+        "Tum Hi Ho"
+    )
+
+    val meitationList = listOf(
+        "Om Namah Shivaya",
+        "Gayatri Mantra"
+    )
 }

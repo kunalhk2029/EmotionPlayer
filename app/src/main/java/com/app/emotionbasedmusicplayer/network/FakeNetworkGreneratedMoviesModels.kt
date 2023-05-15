@@ -16,8 +16,12 @@ object FakeNetworkGreneratedMoviesModels {
         MovieInfo("2)Around the world", uri = "https://youtu.be/GRATpCcWxTA")
     )
 
-    val coolList = listOf<MovieInfo>()
-    val angryList = listOf<MovieInfo>()
+    val angryList = listOf<MovieInfo>(
+        MovieInfo("Gangs of Wasseypur","https://www.youtube.com/watch?v=xndCrKr3ha0"),
+        MovieInfo("Agneepath","https://www.youtube.com/watch?v=o9E2E4kPL2Y"),
+        MovieInfo("Kabir Singh","https://www.youtube.com/watch?v=1Vde8CzBW-o"),
+    )
+
     val sadList = listOf<MovieInfo>(
         MovieInfo("Taare Zameen par ", uri = "https://youtu.be/5vAmkhO-wAQ"),
         MovieInfo("Bajrangi bhaijaan", uri = "https://youtu.be/4KlEH14ijOQ"),
@@ -29,6 +33,7 @@ object FakeNetworkGreneratedMoviesModels {
         MovieInfo("Forrest gump", uri = "https://youtu.be/IuVZ628yBqY")
 
     )
+
     val exciting = listOf<MovieInfo>(
         MovieInfo("Karthik calling Karthik", uri = "https://youtu.be/ravw-oQXn6A"),
         MovieInfo("A Wednesday", uri = "https://youtu.be/LEFkdNQpJ6E"),
@@ -41,4 +46,6 @@ object FakeNetworkGreneratedMoviesModels {
         MovieInfo("Trapped", uri = "https://youtu.be/yZOG0hvvq_Q"),
         MovieInfo("Wrong turn", uri = "https://youtu.be/sq2L4ELuZ78")
     )
+
+    val mediation = listOf(MovieInfo("Guru","https://www.youtube.com/watch?v=oH-o4gOxn_I"))
 }
